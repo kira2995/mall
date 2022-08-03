@@ -1,15 +1,15 @@
 <template>
-  <div class="wrapper">
     <div id="home">
       <NavBar class="home-nav"><div slot="center">购物系统</div></NavBar>
-      <HomeSwiper :banners="banners"></HomeSwiper>
-      <RecommendView :recommends="recommends"></RecommendView>
-      <WeekView></WeekView>
-      <TabControl class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></TabControl>
-      <GoodsList :goods="showType"></GoodsList>
-    </div>
-</div>
-  
+
+      <Scroll class="scroll-content">
+        <HomeSwiper :banners="banners"></HomeSwiper>
+        <RecommendView :recommends="recommends"></RecommendView>
+        <WeekView></WeekView>
+        <TabControl class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></TabControl>
+        <GoodsList :goods="showType"></GoodsList>
+      </Scroll>
+    </div> 
   
 </template>
 
@@ -19,6 +19,8 @@
   import WeekView from './childComps/WeekView.vue'
 
   import NavBar from '@/components/common/navbar/NavBar.vue'
+  import Scroll from '@/components/common/scroll/Scroll'
+
   import TabControl from '@/components/content/tabcontrol/TabControl.vue'
   import GoodsList from '@/components/content/goods/GoodsList.vue'
   
@@ -35,6 +37,7 @@
     WeekView,
     TabControl,
     GoodsList,
+    Scroll
 },
     data() {
       return {
@@ -103,7 +106,8 @@
 
 <style >
   #home{
-    padding-top: 44px;
+    /* padding-top: 44px; */
+    height: 100vh;
   }
   .home-nav{
     background-color: var(--color-tint);
@@ -119,5 +123,10 @@
     position: sticky;
     top:44px;
     z-index: 10;
+  }
+  .scroll-content{
+    height: calc(100% - 93px);
+    overflow: hidden;
+    margin-top:44px;
   }
 </style>
