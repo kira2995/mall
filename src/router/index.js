@@ -40,3 +40,4 @@ const router =new VueRouter({
 
 //3.导出router
 export default router
+

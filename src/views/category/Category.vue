@@ -1,12 +1,14 @@
 <template>
   <div class="wrapper">
-    <div class="content"></div>
+    <div class="content">
+      <h2>分类</h2>
+    </div>
   </div>
   
 </template>
 
 <script>
-   import BScroll from 'better-scroll'
+  import BScroll from 'better-scroll'
   export default {
     name: "Category",
     data(){
