@@ -34,7 +34,7 @@ import Scroll from '@/components/common/scroll/Scroll.vue';
 }
 </script>
 
-<style >
+<style scoped>
   .pro-content{
     height: 200px;
     

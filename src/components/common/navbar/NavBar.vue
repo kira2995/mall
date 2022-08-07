@@ -12,12 +12,15 @@
     }
     </script>
 
-    <style>
+    <style scoped>
         .nav-bar{
             display: flex;
             height: 44px;
             line-height: 44px;
             text-align: center;
+            position: relative;
+            z-index: 10;
+            /* border-bottom: 1px solid #eee; */
         }
         .left,.right{
             width: 60px;

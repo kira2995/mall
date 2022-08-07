@@ -24,13 +24,13 @@
     }
 </script>
 
-<style>
+<style scoped>
     .recommend{
         display: flex;
         width: 100%;
         text-align: center; 
-        padding: 10px 0 20px;
-        border-bottom: 8px solid #eee;
+        padding: 10px 0px 10px;
+        border-bottom: 5px solid #eee;
     }
     .recommend-item{
         flex: 1;

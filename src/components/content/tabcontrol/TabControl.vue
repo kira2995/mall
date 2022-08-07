@@ -33,7 +33,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .tab-control{
         display: flex;
         text-align: center;
@@ -43,13 +43,14 @@ export default {
     }
     .tab-control-item{
         flex: 1;
-        background-color: rgb(249, 251, 252);
+        background-color: rgb(255, 255, 255);
     }
     .tab-control-item span {
         padding: 5px;
     }
     .active{
         color:var(--color-high-text);
+        /* color: red; */
         
     }
     .active span {

@@ -1,12 +1,13 @@
 <template>
     <div id="home">
       <NavBar class="home-nav"><div slot="center">购物系统</div></NavBar>
-
+      <TabControl class="tab-content" ref="tabControl1" :titles="['流行','新款','精选']" @tabClick="tabClick" v-show="istabControlshow"></TabControl>
+      
       <Scroll class="scroll-content" ref="scroll" :probeType="3" @scroll="contentscroll" :pullUpLoad="true" @pullingUp="loadmore">
-        <HomeSwiper :banners="banners"></HomeSwiper>
+        <HomeSwiper :banners="banners" @imageLoad="imageLoad"></HomeSwiper>
         <RecommendView :recommends="recommends"></RecommendView>
         <WeekView></WeekView>
-        <TabControl class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></TabControl>
+        <TabControl ref="tabControl2" :titles="['流行','新款','精选']" @tabClick="tabClick" ></TabControl>
         <GoodsList :goods="showType"></GoodsList>
       </Scroll>
       <!-- <div class="back-top" @click="backClick">
@@ -30,7 +31,7 @@
   import BackTop from '@/components/content/backtop/BackTop.vue'
   
   import {getHomeMultidata,getHomeGoods} from '@/network/home'
-
+  import {debounce} from '@/common/utils/utils'
   
 
   export default {
@@ -55,13 +56,24 @@
           'sell': {page: 0, list:[]},
         },
         currentType:'pop',
-        isshowbacktop: false 
+        isshowbacktop: false,
+        taboffsetTop: 0,
+        istabControlshow: false,
+        saveY: 0
       }
     },
     computed:{
       showType(){
         return this.goods[this.currentType].list
       }
+    },
+    //保存离开时的位置
+    deactivated() {
+      this.saveY = this.$refs.scroll.scroll.y
+    },
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+      this.$refs.scroll.refresh()
     },
     created() {
       //请求轮播图和推荐商品的数据
@@ -70,11 +82,16 @@
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
-
+    },
+    mounted() {
+      /**
+       * 图片加载的事件监听
+       */
+      const refresh = debounce(this.$refs.scroll.refresh, 200)
       //监听图片加载
       this.$bus.$on('itemImageLoad', () =>{
         // console.log('图片加载完成')
-        this.$refs.scroll.refresh()
+        refresh()
       })
     },
     methods: {
@@ -93,6 +110,8 @@
           this.currentType='sell'
           break    
       }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
      },
      //返回顶部
       backClick() {
@@ -101,15 +120,22 @@
       },
       //监听滚动的方法
       contentscroll(position) {
-        // console.log(position)
-        this.isshowbacktop = -position.y > 570
+        //1.返回顶部图片的显示
+        this.isshowbacktop = (-position.y) > 570
+
+        //2.tabControl的顶部显示
+        this.istabControlshow = (-position.y) > this.taboffsetTop
       },
+      //上拉加载
       loadmore() {
         this.getHomeGoods(this.currentType)
 
         // this.$refs.scroll.scroll.refresh()
       },
-      
+      //监听轮播图加载
+      imageLoad() {
+        this.taboffsetTop = this.$refs.tabControl2.$el.offsetTop
+      },
       /*
       * 网络请求相关的方法
       */
@@ -135,37 +161,38 @@
   }
 </script>
 
-<style >
-  #home{
+<style scoped>
+  #home {
     /* padding-top: 44px; */
     height: 100vh;
+    position: relative;
   }
-  .home-nav{
+  .home-nav {
     background-color: var(--color-tint);
     color: #fff;
-    position: fixed;
+
+    /* 原生滚动的固定方式 */
+    /* position: fixed;
     top: 0;
     left: 0;
     right:0;
+    z-index: 10; */
+  }
+  .tab-content {
+    position: relative;
     z-index: 10;
   }
-  .tab-control{
-    position: sticky;
-    top:44px;
-    z-index: 10;
-  }
-  .scroll-content{
-    height: calc(100% - 93px);
+  .scroll-content {
     overflow: hidden;
-    margin-top:44px;
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+    
+    /* margin-top:44px; 
+      height: calc(100% - 93px);
+      overflow: hidden;
+    */
   }
-  .back-top{
-        position: fixed;
-        right: 5px;
-        bottom: 49px;
-    }
-    .back-top img{
-        height: 43px;
-        width: 43px;
-    }
 </style>
