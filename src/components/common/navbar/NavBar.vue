@@ -20,11 +20,11 @@
             text-align: center;
             position: relative;
             z-index: 10;
+            background: #fff;
             /* border-bottom: 1px solid #eee; */
         }
         .left,.right{
             width: 60px;
-            
         }
         .center{
             flex: 1;
