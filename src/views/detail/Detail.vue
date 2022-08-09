@@ -2,6 +2,7 @@
   <div class="detail">
     <DetailNavBar class="detail-navbar" @titleClick="titleClick" ref="detailnav"/>
     <Scroll class="detail-content" ref="scroll" :probeType="3" @scroll="contentScroll">
+        
         <DetailSwiper :topImages="topImages"/>
         <DetailBaseInfo :goods="goods"/>
         <DetailShopInfo :shop="shop"/>
@@ -10,8 +11,9 @@
         <DetailCommentInfo ref="comments" :commentInfo="commentInfo"/>
         <GoodsList ref="recommends" :goods="recommends"/>
     </Scroll>
-    <DetailBottomBar/>
+    <DetailBottomBar @addTOCart="addToCart"/>
     <BackTop @click.native="backClick" v-show="isshowbacktop"/>
+    <!-- <toast message="message" :msgShow="msgShow"/> -->
   </div>
 </template>
 
@@ -28,28 +30,27 @@ import DetailBottomBar from './childCom/DetailBottomBar.vue';
 import {getDetail, Goods, Shop, GoodsParam, getRecommend} from '@/network/detail'
 
 import Scroll from '@/components/common/scroll/Scroll.vue';
+// import Toast from '@/components/common/toast/Toast.vue';
+
 import GoodsList from '@/components/content/goods/GoodsList.vue';
 import BackTop from '@/components/content/backtop/BackTop.vue';
-import { debounce } from '@/common/utils/utils';
 
-
-
-
-    export default {
+export default {
     name: "Detail", 
     components: {
-    DetailNavBar,
-    DetailSwiper,
-    DetailBaseInfo,
-    DetailShopInfo,
-    Scroll,
-    DetailGoodsInfo,
-    DetailParamInfo,
-    DetailCommentInfo,
-    GoodsList,
-    DetailBottomBar,
-    BackTop
-},
+        DetailNavBar,
+        DetailSwiper,
+        DetailBaseInfo,
+        DetailShopInfo,
+        Scroll,
+        DetailGoodsInfo,
+        DetailParamInfo,
+        DetailCommentInfo,
+        GoodsList,
+        DetailBottomBar,
+        BackTop,
+        // Toast,
+    },
     data() {
         return {
             iid: null,
@@ -64,6 +65,8 @@ import { debounce } from '@/common/utils/utils';
             getdetailTopY: null,
             currentIndex: 0,
             isshowbacktop: false,
+            // message: '',
+            // msgShow: false
         }
     },
     created() {
@@ -90,7 +93,7 @@ import { debounce } from '@/common/utils/utils';
         })
         //3.请求推荐数据
         getRecommend().then(res => {
-            console.log(res)
+            // console.log(res)
             this.recommends = res.data.list
         }) 
         //4.给getdetailTopY赋值
@@ -135,17 +138,38 @@ import { debounce } from '@/common/utils/utils';
         // console.log('backClick')
         this.$refs.scroll.scrollTo(0, 0, 200)
       },
+      //购物车功能
+      addToCart() {
+        //1.获取商品信息
+        const product = {}
+        product.image = this.topImages[0]
+        product.title = this.goods.title
+        product.desc = this.goods.desc
+        product.price = this.goods.newPrice
+        product.iid = this.iid
+        //2.将商品加入购物车
+        this.$store.commit('addCart', product)
+
+        this.$toast.Show('已加入购物车')
+    //     this.msgShow = true
+    //     this.message = '已加入购物车' 
+    //     setTimeout(() => {
+    //         this.msgShow = false
+    //         this.message = '' 
+    //     },1500)
+    //   },
     },
-    updated() {
-         this.detailTopY = []
+        updated() {
+            this.detailTopY = []
             this.detailTopY.push(0)
             this.detailTopY.push(this.$refs.params.$el.offsetTop)
             this.detailTopY.push(this.$refs.comments.$el.offsetTop)
             this.detailTopY.push(this.$refs.recommends.$el.offsetTop)
             // console.log(this.detailTopY)
     },
+    }
     
-}
+ }
 </script>
 
 <style scoped>

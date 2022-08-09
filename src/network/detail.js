@@ -1,19 +1,44 @@
 import { request } from "./request";
 
-export function getDetail(iid) {
-    return request({
-        url: '/detail',
-        params: {
-            iid
-        }
-    }) 
-}
+    export function getDetail(iid) {
+        return request({
+            url: '/detail',
+            params: {
+                iid
+            }
+        }) 
+    }
 
-export function getRecommend() {
+    export function getRecommend() {
+        return request({
+            url: '/recommend',
+        }) 
+    }
+
+    export function getCategory() {
+        return request({
+        url: '/category'
+        })
+    }
+  
+  export function getSubcategory(maitKey) {
     return request({
-        url: '/recommend',
-    }) 
-}
+      url: '/subcategory',
+      params: {
+        maitKey
+      }
+    })
+  }
+  
+  export function getCategoryDetail(miniWallkey, type) {
+    return request({
+      url: '/subcategory/detail',
+      params: {
+        miniWallkey,
+        type
+      }
+    })
+  }
 
 export class Goods {
     constructor(itemInfo, columns, services) {

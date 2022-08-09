@@ -2,7 +2,7 @@
   <div v-if="Object.keys(goods).length !== 0" class="base-info">
     <div class="info-title">{{goods.title}}</div>
     <div class="info-price">
-      <span class="n-price">{{goods.newPrice}}</span>
+      <span class="n-price">{{goods.newPrice.substring(0,6)}}</span>
       <span class="o-price">{{goods.oldPrice}}</span>
       <span class="discount">{{goods.discount}}</span>
     </div>
@@ -84,19 +84,25 @@
   }
 
   .info-service {
-    display: flex;
+    display:flex;
     justify-content: space-between;
     line-height: 60px;
-  }
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* overflow:hidden; */
 
+  }
   .info-service-item img {
     width: 14px;
     height: 14px;
     position: relative;
     top: 2px;
+    left: 0;
   }
 
   .info-service-item span {
+    text-align: center;
+    /* float: right; */
     font-size: 13px;
     color: #333;
   }
